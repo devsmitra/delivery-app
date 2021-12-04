@@ -1,12 +1,15 @@
 import type { AppProps } from "next/app";
 import "../styles/globals.css";
 import { Box } from "@mui/system";
+import { CookiesProvider } from "react-cookie";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Box sx={{ maxHeight: "100vh" }}>
-      <Component {...pageProps} />
-    </Box>
+    <CookiesProvider>
+      <Box sx={{ maxHeight: "100vh" }}>
+        <Component {...pageProps} />
+      </Box>
+    </CookiesProvider>
   );
 }
 

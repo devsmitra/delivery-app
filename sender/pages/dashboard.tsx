@@ -2,13 +2,13 @@ import React, { FC } from "react";
 import { Divider, Tab, Tabs } from "@mui/material";
 import MenuAppBar from "../src/client/components/AppBar";
 import ParcelList from "../src/client/components/ParcelList";
+import { useCookies } from "react-cookie";
 
 const TABS = ["All", "In Transit", "Delivered"];
 const TabsContent = [ParcelList, ParcelList, ParcelList];
 
 const Dashboard: FC = () => {
   const [value, setValue] = React.useState(0);
-
   const onTabChange = (_event: React.SyntheticEvent, value: number) =>
     setValue(value);
   const TabContent = TabsContent[value];
@@ -24,6 +24,21 @@ const Dashboard: FC = () => {
       <TabContent tabIndex={value} />
     </>
   );
+};
+
+export const getServerSideProps = (ctx: any) => {
+  const { cookie } = ctx.req.headers;
+  if (!cookie) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/",
+      },
+    };
+  }
+  return {
+    props: {},
+  };
 };
 
 export default Dashboard;
