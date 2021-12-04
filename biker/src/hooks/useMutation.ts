@@ -4,7 +4,6 @@ import { useCookies } from "react-cookie";
 
 export const useMutation = (query: string) => {
   const [cookies] = useCookies(["token"]);
-
   const fetchData = async (options?: any) => {
     setResult([null, null, true, fetchData]);
     try {

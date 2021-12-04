@@ -6,6 +6,8 @@ const call = (url: string, data: RequestInit): Promise<any> => {
     ...data,
     headers: {
       "Content-Type": "application/json",
+      ...data.headers,
+      App: "Sender",
     },
   } as RequestInit)
     .then((response) => {

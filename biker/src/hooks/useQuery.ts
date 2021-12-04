@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ApiService } from "../services/ApiService";
+import { useCookies } from "react-cookie";
 
 const generateQueryString = (query: any): string => {
   if (!query) return "";
@@ -8,10 +9,17 @@ const generateQueryString = (query: any): string => {
 };
 
 export const useQuery = (query: string, variables?: any) => {
+  const [cookies] = useCookies(["token"]);
   const fetchData = async (options?: any) => {
     try {
       const qs = generateQueryString(options.qs);
-      const data = await ApiService.get(`${query}?${qs}`, options);
+      const data = await ApiService.get(`${query}?${qs}`, {
+        ...options,
+        headers: {
+          ...options?.headers,
+          Authorization: cookies?.token,
+        },
+      });
       setResult([null, data, false, fetchData]);
     } catch (error) {
       setResult([error, null, false, fetchData]);

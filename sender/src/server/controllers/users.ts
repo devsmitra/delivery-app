@@ -14,7 +14,10 @@ export const login = async (
   res: NextApiResponse<Response<UserResponse>>
 ): Promise<void> => {
   const { email, password } = req.body;
-  const user = users.find((u) => u.email === email);
+  const { app } = req.headers;
+  const user = users.find(
+    (u) => u.email === email && u.role === app?.toLowerCase()
+  );
   if (!user || user.password !== password) {
     return res.status(401).json({
       message: "Invalid credentials",
