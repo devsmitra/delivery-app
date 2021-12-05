@@ -24,7 +24,11 @@ export const login = async (
     });
   }
   const result = { ...user, password: undefined } as unknown as User;
-  const token = await sign(result);
+  const token = await sign({
+    ...result,
+    app: req.headers.app ?? "Biker",
+  });
+
   return res.status(200).json({
     message: "Login Successful",
     data: {

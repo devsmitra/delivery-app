@@ -2,7 +2,7 @@ export interface ParcelDelivery {
   trackingNumber: string;
   originAddress: string;
   deliveryAddress: string;
-  deliveryStatus: "Ready for pickup" | "In Transit" | "Delivered";
+  deliveryStatus: string;
   createdAt: Date;
   updatedAt: Date;
   senderId: string;

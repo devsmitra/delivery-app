@@ -9,7 +9,7 @@ const generateQueryString = (query: any): string => {
 };
 
 export const useQuery = (query: string, variables?: any) => {
-  const [cookies] = useCookies(["token"]);
+  const [cookies, _, removeCookie] = useCookies(["token"]);
   const fetchData = async (options?: any) => {
     try {
       const qs = generateQueryString(options.qs);
@@ -21,7 +21,10 @@ export const useQuery = (query: string, variables?: any) => {
         },
       });
       setResult([null, data, false, fetchData]);
-    } catch (error) {
+    } catch (error: any) {
+      if (error?.code === 401) {
+        removeCookie("token");
+      }
       setResult([error, null, false, fetchData]);
     }
   };

@@ -12,10 +12,10 @@ import {
   Typography,
 } from "@mui/material";
 import ListItem from "@mui/material/ListItem";
-import { FC, useEffect, useState } from "react";
+import { FC, Fragment, useEffect, useState } from "react";
 import { useQuery } from "../hooks/useQuery";
 import Loader from "./Loader";
-import { ApiService } from "../services/ApiService";
+import { useMutation } from "../hooks/useMutation";
 
 interface ConfirmationParcelDialogProps {
   open: null | any;
@@ -35,12 +35,15 @@ const Confirmation: FC<ConfirmationParcelDialogProps> = ({
   onClose,
   tabIndex,
 }) => {
+  const [err, data, loading, updateParcel] = useMutation("/parcels");
+
   const onSubmit = async () => {
-    await ApiService.put(`/parcels?trackingNumber=${open.trackingNumber}`, {
+    await updateParcel({
       body: {
-        senderId: "1",
         deliveryStatus: "Picked",
+        trackingNumber: open.trackingNumber,
       } as any,
+      method: "PUT",
     });
     onClose && onClose();
   };
@@ -81,9 +84,8 @@ export default function ParcelList({ tabIndex }: ParcelListProps) {
   };
 
   const getListItem = (item: any) => (
-    <>
+    <Fragment key={item.trackingNumber}>
       <ListItem
-        key={item.trackingNumber}
         secondaryAction={
           tabIndex !== 2 ? (
             <Button variant="contained" onClick={() => onPickClick(item)}>
@@ -101,7 +103,7 @@ export default function ParcelList({ tabIndex }: ParcelListProps) {
         </ListItemButton>
       </ListItem>
       <Divider component="li" />
-    </>
+    </Fragment>
   );
 
   if (loading) return <Loader />;

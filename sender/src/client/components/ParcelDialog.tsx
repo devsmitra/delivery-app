@@ -5,6 +5,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Box } from "@mui/system";
 import React from "react";
+import { useMutation } from "../hooks/useMutation";
 import { ApiService } from "../services/ApiService";
 
 interface ParcelDialogProps {
@@ -15,6 +16,8 @@ interface ParcelDialogProps {
 
 const ParcelDialog: React.FC<ParcelDialogProps> = (props) => {
   const [address, setAddress] = React.useState({});
+  const [err, data, loading, createParcel] = useMutation("/parcels");
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setAddress((ad: any) => ({
       ...ad,
@@ -24,7 +27,7 @@ const ParcelDialog: React.FC<ParcelDialogProps> = (props) => {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const data = await ApiService.post("/parcels", {
+      await createParcel({
         body: {
           ...address,
           senderId: "1",

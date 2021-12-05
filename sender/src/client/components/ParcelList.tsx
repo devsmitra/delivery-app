@@ -58,11 +58,7 @@ export default function ParcelList({ tabIndex }: ParcelListProps) {
   };
   const getListItem = (item: any) => (
     <Fragment key={item.trackingNumber}>
-      <ListItem
-        key={item.trackingNumber}
-        disablePadding
-        onClick={() => setParcel(item)}
-      >
+      <ListItem disablePadding onClick={() => setParcel(item)}>
         <ListItemButton alignItems="flex-start">
           <ListItemText
             primary={item.originAddress}

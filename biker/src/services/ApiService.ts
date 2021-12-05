@@ -17,7 +17,11 @@ const call = (url: string, data: RequestInit): Promise<any> => {
       if (code === 200) {
         return response;
       }
-      throw response;
+      // eslint-disable-next-line no-throw-literal
+      throw {
+        ...response,
+        code,
+      };
     });
 };
 
