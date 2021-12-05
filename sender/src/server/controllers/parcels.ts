@@ -23,11 +23,14 @@ export const getParcels = (
   const parcelsToReturn = (parcel: ParcelDelivery) => {
     let status =
       parcel.deliveryStatus?.toUpperCase() === deliveryStatus?.toUpperCase();
-    if (
-      status &&
+    // sender can only see their own parcels
+    if (user.role.toLowerCase() === "sender") {
+      status = status && parcel.senderId === user.id;
+    } else if (
       deliveryStatus.toUpperCase() !== Status.READY_FOR_PICKUP.toUpperCase()
     ) {
-      status = parcel.bikerId === user.id || parcel.senderId === user.id;
+      // biker can only see parcels that are picked up by them
+      status = status && parcel.bikerId === user.id;
     }
     return status;
   };
