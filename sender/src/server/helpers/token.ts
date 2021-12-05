@@ -1,12 +1,18 @@
-import jwt from "jsonwebtoken";
-import { promisify } from "util";
+import jwt, { SignOptions } from "jsonwebtoken";
+import { User } from "../../shared/typings/User";
 
+// Secret should be part of the environment variables and not stored in the code
+// I've added in code for simplicity
 const secret = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-const defaultOptions = {
+
+const defaultOptions: SignOptions = {
   expiresIn: "1h",
 };
 
-export const sign = (payload: any, options?: any): Promise<string> => {
+export const sign = (
+  payload: { [k: string]: any },
+  options?: SignOptions
+): Promise<string> => {
   return new Promise((resolve, reject) => {
     jwt.sign(
       payload,
@@ -17,16 +23,18 @@ export const sign = (payload: any, options?: any): Promise<string> => {
       },
       function (err, token) {
         if (err) {
-          reject(err);
-        } else {
-          resolve(token as string);
+          return reject(err);
         }
+        return resolve(token as string);
       }
     );
   });
 };
 
-export const verify = (token: string, options?: any): any => {
+export const verify = (
+  token: string,
+  options?: SignOptions
+): Promise<User & { app: string }> => {
   return new Promise((resolve, reject) => {
     jwt.verify(
       token,
@@ -35,11 +43,11 @@ export const verify = (token: string, options?: any): any => {
         ...defaultOptions,
         ...options,
       },
-      function (err, data) {
+      function (err, payload) {
         if (err) {
           return reject(err);
         }
-        resolve(data);
+        return resolve(payload as User & { app: string });
       }
     );
   });

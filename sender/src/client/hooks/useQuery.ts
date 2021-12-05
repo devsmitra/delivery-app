@@ -1,18 +1,22 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ApiService } from "../services/ApiService";
 import { useCookies } from "react-cookie";
 
-const generateQueryString = (query: any): string => {
+type QS = { [k: string]: string | number | boolean };
+type Options = RequestInit & { qs?: QS };
+
+const generateQueryString = (query?: QS): string => {
   if (!query) return "";
   const queryString = Object.keys(query).map((key) => `${key}=${query[key]}`);
   return queryString.join("&");
 };
 
-export const useQuery = (query: string, variables?: any) => {
+// custom hook to query(get) the API
+export const useQuery = (query: string, options?: Options) => {
   const [cookies, _, removeCookie] = useCookies(["token"]);
-  const fetchData = async (options?: any) => {
+  const fetchData = async (options?: Options) => {
     try {
-      const qs = generateQueryString(options.qs);
+      const qs = generateQueryString(options?.qs);
       const data = await ApiService.get(`${query}?${qs}`, {
         ...options,
         headers: {
@@ -30,9 +34,11 @@ export const useQuery = (query: string, variables?: any) => {
   };
 
   const [result, setResult] = useState<any>([null, null, true, fetchData]);
-  useEffect(() => {
-    fetchData(variables);
-  }, []);
+
+  // Can be used for initial data fetching
+  // useEffect(() => {
+  //   fetchData(variables);
+  // }, []);
 
   return result;
 };

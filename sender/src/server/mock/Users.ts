@@ -1,5 +1,5 @@
-import { User } from "../typings/user";
 import { v4 as uuidv4 } from "uuid";
+import { User } from "../../shared/typings/User";
 
 const createSender = (count: number): User => ({
   id: uuidv4(),

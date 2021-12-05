@@ -1,12 +1,12 @@
+import React from "react";
 import { Button, Stack, TextField } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Box } from "@mui/system";
-import React from "react";
+import { PARCEL_API_URL } from "../constants/APP";
 import { useMutation } from "../hooks/useMutation";
-import { ApiService } from "../services/ApiService";
 
 interface ParcelDialogProps {
   open: boolean;
@@ -14,12 +14,20 @@ interface ParcelDialogProps {
   onCreate: (address: any) => void;
 }
 
+interface AddressForm {
+  originAddress: string;
+  deliveryAddress: string;
+}
+
 const ParcelDialog: React.FC<ParcelDialogProps> = (props) => {
-  const [address, setAddress] = React.useState({});
-  const [err, data, loading, createParcel] = useMutation("/parcels");
+  const [address, setAddress] = React.useState<AddressForm>({
+    originAddress: "",
+    deliveryAddress: "",
+  });
+  const [err, data, loading, createParcel] = useMutation(PARCEL_API_URL);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setAddress((ad: any) => ({
+    setAddress((ad: AddressForm) => ({
       ...ad,
       [event.target.name]: event.target.value,
     }));

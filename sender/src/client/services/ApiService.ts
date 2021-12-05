@@ -1,8 +1,8 @@
-const call = (url: string, data: RequestInit): Promise<any> => {
-  const basePath = "/api";
-  let code = 200;
+import { API_URL } from "../constants/APP";
 
-  return fetch(basePath + url, {
+const call = (url: string, data: RequestInit): Promise<any> => {
+  let code = 200;
+  return fetch(API_URL + url, {
     ...data,
     headers: {
       "Content-Type": "application/json",

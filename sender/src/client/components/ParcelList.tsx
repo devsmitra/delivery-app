@@ -13,13 +13,20 @@ import { useQuery } from "../hooks/useQuery";
 import Loader from "./Loader";
 import { ParcelDetails } from "./Drawer";
 import ParcelDialog from "./ParcelDialog";
+import NotFound from "./NotFound";
+import { DASHBOARD_TABS, PARCEL_API_URL } from "../constants/APP";
+import { ParcelDelivery } from "../../shared/typings/parcels";
 
 interface ParcelListProps {
   tabIndex: number;
 }
 
-const TABS = ["Ready for pickup", "In Transit", "Delivered"];
-const columns = [
+export interface TableColumn {
+  id: keyof ParcelDelivery;
+  label: string;
+}
+
+const columns: TableColumn[] = [
   {
     id: "originAddress",
     label: "Origin Address",
@@ -39,14 +46,14 @@ const columns = [
 ];
 
 export default function ParcelList({ tabIndex }: ParcelListProps) {
-  const status = TABS[tabIndex];
+  const status = DASHBOARD_TABS[tabIndex];
   const options = {
     qs: {
       status: status,
     },
   };
-  const [err, data, loading, refetch] = useQuery("/parcels", options);
-  const [parcel, setParcel] = useState(null);
+  const [err, data, loading, refetch] = useQuery(PARCEL_API_URL, options);
+  const [parcel, setParcel] = useState<ParcelDelivery | null>(null);
   const [open, setOpen] = useState(false);
   useEffect(() => refetch(options), [tabIndex]);
 
@@ -56,7 +63,7 @@ export default function ParcelList({ tabIndex }: ParcelListProps) {
     onClose();
     refetch(options);
   };
-  const getListItem = (item: any) => (
+  const getListItem = (item: ParcelDelivery) => (
     <Fragment key={item.trackingNumber}>
       <ListItem disablePadding onClick={() => setParcel(item)}>
         <ListItemButton alignItems="flex-start">
@@ -79,7 +86,7 @@ export default function ParcelList({ tabIndex }: ParcelListProps) {
     );
   return (
     <>
-      <List>{items.map(getListItem)}</List>
+      {items.length ? <List>{items.map(getListItem)}</List> : <NotFound />}
       <ParcelDetails
         parcel={parcel}
         columns={columns}

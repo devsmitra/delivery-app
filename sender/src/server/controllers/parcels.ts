@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { v4 as uuidv4 } from "uuid";
-import { ParcelDelivery } from "../typings/parcels";
+import { ParcelDelivery } from "../../shared/typings/parcels";
+import { User } from "../../shared/typings/User";
 import { Response } from "../typings/Response";
-import { User } from "../typings/user";
 
 const parcels: ParcelDelivery[] = [];
 export enum Status {
@@ -18,6 +18,8 @@ export const getParcels = (
   const { status = Status.READY_FOR_PICKUP } = req.query;
   const user = req.previewData as User;
   const deliveryStatus = Array.isArray(status) ? status[0] : status;
+
+  // Filter parcel by status and user
   const parcelsToReturn = (parcel: ParcelDelivery) => {
     let status =
       parcel.deliveryStatus?.toUpperCase() === deliveryStatus?.toUpperCase();
@@ -61,14 +63,20 @@ export const updateParcel = (
   res: NextApiResponse<Response<ParcelDelivery>>
 ): void => {
   const user = req.previewData as User;
-  const { trackingNumber } = req.body;
+  const { trackingNumber, date } = req.body;
+
+  // Find parcel by tracking number
   const index = parcels.findIndex((p) => p.trackingNumber === trackingNumber);
+
   if (index !== -1) {
     const parcel = parcels[index];
     let status = parcel.deliveryStatus;
+    // Check if parcel is in "Ready for pickup" status move to "In transit"
     if (parcel.deliveryStatus === Status.READY_FOR_PICKUP) {
       status = Status.IN_TRANSIT;
-    } else if (parcel.deliveryStatus === Status.IN_TRANSIT) {
+    }
+    // Check if parcel is in "In transit" status move to "Delivered"
+    else if (parcel.deliveryStatus === Status.IN_TRANSIT) {
       status = Status.DELIVERED;
     }
 
@@ -76,7 +84,7 @@ export const updateParcel = (
       parcels[index] = {
         ...parcel,
         deliveryStatus: status,
-        updatedAt: new Date(),
+        updatedAt: new Date(date),
         bikerId: user.id,
       };
     }

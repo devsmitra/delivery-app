@@ -13,13 +13,14 @@ import { useNavigate } from "react-router";
 
 export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [_cookies, _setCookie, removeCookie] = useCookies(["token"]);
   const navigate = useNavigate();
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) =>
-    setAnchorEl(event.currentTarget);
+  const cookies = useCookies(["token"]);
+  const removeCookie = cookies[2];
 
   const handleClose = () => setAnchorEl(null);
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) =>
+    setAnchorEl(event.currentTarget);
 
   const onLogout = () => {
     removeCookie("token");

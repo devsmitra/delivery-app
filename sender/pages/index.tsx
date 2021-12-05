@@ -14,10 +14,11 @@ import Router from "next/router";
 import { useMutation } from "../src/client/hooks/useMutation";
 import Loader from "../src/client/components/Loader";
 import { useCookies } from "react-cookie";
+import { LOGIN_API_URL } from "../src/client/constants/APP";
 
 const Home: NextPage = () => {
   const [formData, setFormData] = useState({});
-  const [err, data, loading, login] = useMutation("/login");
+  const [err, data, loading, login] = useMutation(LOGIN_API_URL);
   const [cookies, setCookie] = useCookies(["token"]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>

@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Response } from "../typings/Response";
 import { users } from "../mock/Users";
-import { User } from "../typings/user";
 import { sign } from "../helpers/token";
+import { User } from "../../shared/typings/User";
 
 interface UserResponse {
   user: User;
@@ -15,15 +15,19 @@ export const login = async (
 ): Promise<void> => {
   const { email, password } = req.body;
   const { app } = req.headers;
+  const appName = Array.isArray(app) ? app[0] : app;
+
   const user = users.find(
-    (u) => u.email === email && u.role === app?.toLowerCase()
+    (u) => u.email === email && u.role === appName?.toLowerCase()
   );
+
   if (!user || user.password !== password) {
     return res.status(401).json({
       message: "Invalid credentials",
     });
   }
   const result = { ...user, password: undefined } as unknown as User;
+  // Generate token for user
   const token = await sign({
     ...result,
     app: req.headers.app ?? "Biker",

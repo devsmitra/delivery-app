@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import { useCookies } from "react-cookie";
+import "./index.css";
 
 enum ROUTES {
   DASHBOARD = "/dashboard",
@@ -19,7 +20,7 @@ const App = () => {
           <Route
             path={ROUTES.LOGIN}
             element={
-              !isAuthenticated ? <Login /> : <Navigate to={ROUTES.DASHBOARD} />
+              isAuthenticated ? <Login /> : <Navigate to={ROUTES.DASHBOARD} />
             }
           />
           <Route

@@ -1,30 +1,24 @@
-import React, { FC } from 'react';
-import { Divider, Tab, Tabs } from '@mui/material';
-import MenuAppBar from '../components/AppBar';
-import ParcelList from '../components/ParcelList';
-
-const TABS = ['All', 'In Transit', 'Delivered'];
-const TabsContent = [
-    ParcelList,
-    ParcelList,
-    ParcelList,
-];
+import React, { FC } from "react";
+import { Divider, Tab, Tabs } from "@mui/material";
+import MenuAppBar from "../components/AppBar";
+import ParcelList from "../components/ParcelList";
+import { DASHBOARD_TABS } from "../constants/APP";
 
 const Dashboard: FC = () => {
-    const [value, setValue] = React.useState(0);
-    const onTabChange = (_event: React.SyntheticEvent, newValue: number) => setValue(newValue);
-    const TabContent = TabsContent[value];
-    return (
-        <>
-            <MenuAppBar />
-            <Tabs value={value} onChange={onTabChange} >
-                {TABS.map((tab) => (<Tab label={tab} key={tab} />))}
-            </Tabs>
-            <Divider />
-            <TabContent tabIndex={value} />
-        </>
-    );
-}
-
+  const [value, setValue] = React.useState(0);
+  const onTabChange = (_e: React.SyntheticEvent, val: number) => setValue(val);
+  return (
+    <>
+      <MenuAppBar />
+      <Tabs value={value} onChange={onTabChange}>
+        {DASHBOARD_TABS.map((tab) => (
+          <Tab label={tab} key={tab} />
+        ))}
+      </Tabs>
+      <Divider />
+      <ParcelList tabIndex={value} />
+    </>
+  );
+};
 
 export default Dashboard;

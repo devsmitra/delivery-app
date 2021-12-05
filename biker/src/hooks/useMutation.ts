@@ -2,9 +2,10 @@ import { useState } from "react";
 import { ApiService } from "../services/ApiService";
 import { useCookies } from "react-cookie";
 
+// Custom hook to use http post and put methods
 export const useMutation = (query: string) => {
   const [cookies, _, removeCookie] = useCookies(["token"]);
-  const fetchData = async (options?: any) => {
+  const fetchData = async (options?: RequestInit) => {
     setResult([null, null, true, fetchData]);
     try {
       const handler =

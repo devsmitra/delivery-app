@@ -13,7 +13,7 @@ import Router from "next/router";
 
 export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const [_cookies, _setCookie, removeCookie] = useCookies(["token"]);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);

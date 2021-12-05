@@ -8,8 +8,20 @@ import {
   TableRow,
   Drawer,
 } from "@mui/material";
+import { ParcelDelivery } from "../../shared/typings/parcels";
+import type { TableColumn } from "./ParcelList";
 
-export const ParcelDetails = ({ parcel, onClose, columns }: any) => (
+interface ParcelDetailsProps {
+  parcel: ParcelDelivery | null;
+  onClose: () => void;
+  columns: TableColumn[];
+}
+
+export const ParcelDetails = ({
+  parcel,
+  onClose,
+  columns,
+}: ParcelDetailsProps) => (
   <Drawer
     anchor="bottom"
     open={!!parcel}
@@ -34,7 +46,7 @@ export const ParcelDetails = ({ parcel, onClose, columns }: any) => (
       <CardContent>
         <Table>
           <TableBody>
-            {columns?.map((column: any) => {
+            {columns?.map((column: TableColumn) => {
               const value = parcel && parcel[column.id];
               return (
                 <TableRow tabIndex={-1} key={column.id}>

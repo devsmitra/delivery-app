@@ -13,10 +13,11 @@ import { useMutation } from "../hooks/useMutation";
 import Loader from "../components/Loader";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import { LOGIN_API_URL } from "../constants/APP";
 
 const Login: FC = () => {
   const [formData, setFormData] = useState({});
-  const [err, data, loading, login] = useMutation("/login");
+  const [err, data, loading, login] = useMutation(LOGIN_API_URL);
   const [_, setCookie] = useCookies(["token"]);
   const navigate = useNavigate();
 

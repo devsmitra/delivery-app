@@ -1,7 +1,8 @@
+import { API_URL } from "../constants/APP";
+
 const call = (url: string, data: RequestInit): Promise<any> => {
-  const basePath = "http://localhost:3000/api";
   let code = 200;
-  return fetch(basePath + url, {
+  return fetch(API_URL + url, {
     ...data,
     headers: {
       "Content-Type": "application/json",
@@ -14,7 +15,8 @@ const call = (url: string, data: RequestInit): Promise<any> => {
       return response.json();
     })
     .then((response) => {
-      if (code === 200) {
+      // More checks can be added here
+      if (code === 200 || code === 201) {
         return response;
       }
       // eslint-disable-next-line no-throw-literal
@@ -25,25 +27,27 @@ const call = (url: string, data: RequestInit): Promise<any> => {
     });
 };
 
+interface Response {
+  message: string;
+  data?: any;
+}
+
 export const ApiService = {
-  get: (url: string, data: RequestInit = {}): Promise<any> => {
-    return call(url, {
+  get: (url: string, data: RequestInit = {}): Promise<Response> =>
+    call(url, {
       ...data,
       method: "GET",
-    });
-  },
-  post: (url: string, data: RequestInit): Promise<any> => {
-    return call(url, {
+    }),
+  post: (url: string, data: RequestInit): Promise<Response> =>
+    call(url, {
       ...data,
       method: "POST",
       body: JSON.stringify(data?.body ?? {}),
-    });
-  },
-  put: (url: string, data: RequestInit): Promise<any> => {
-    return call(url, {
+    }),
+  put: (url: string, data: RequestInit): Promise<Response> =>
+    call(url, {
       ...data,
       method: "PUT",
       body: JSON.stringify(data?.body ?? {}),
-    });
-  },
+    }),
 };
