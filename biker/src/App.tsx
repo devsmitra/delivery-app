@@ -20,7 +20,7 @@ const App = () => {
           <Route
             path={ROUTES.LOGIN}
             element={
-              isAuthenticated ? <Login /> : <Navigate to={ROUTES.DASHBOARD} />
+              isAuthenticated ? <Navigate to={ROUTES.DASHBOARD} /> : <Login />
             }
           />
           <Route
